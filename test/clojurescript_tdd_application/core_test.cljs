@@ -1,7 +1,12 @@
 (ns clojurescript-tdd-application.core-test
-  (:require [cljs.test :refer-macros [deftest is testing run-tests]]
-            [clojurescript-tdd-application.core :as sut]))
+  (:require [cljs.test :refer-macros [is testing async]]
+            [devcards.core :refer-macros [deftest]]))
 
-(deftest test-numbers
-  (is (= 1 0)))
-
+(deftest a-test
+  (testing "FIXME, I fail."
+    (async done
+           (js/setTimeout
+            (fn []
+              (is (= 1 1))
+              (done))
+            100))))

@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[lein-doo "0.1.7"]
+                 [devcards "0.2.1-7"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.227"]]
   :plugins [[lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]
@@ -24,7 +25,16 @@
                         :source-paths ["src" "test"]
                         :compiler {:main runners.doo
                                    :optimizations :none
-                                   :output-to "resources/public/cljs/tests/all-tests.js"}}]
+                                   :output-to "resources/public/cljs/tests/all-tests.js"}}
+                       {:id "devcards-test"
+                        :source-paths ["src" "test"]
+                        :figwheel {:devcards true}
+                        :compiler {:main runners.browser
+                                   :optimizations :none
+                                   :asset-path "cljs/tests/out"
+                                   :output-dir "resources/public/cljs/tests/out"
+                                   :output-to "resources/public/cljs/tests/all-tests.js"
+                                   :source-map-timestamp true}}]
               :test-commands {"test" ["lein" "doo" "phantom" "test" "once"]}}
   :main ^:skip-aot clojurescript-tdd-application.core
   :target-path "target/%s"

@@ -3,9 +3,14 @@
 Clojurescript test showcase, based on https://8thlight.com/blog/eric-smith/2016/10/05/a-testable-clojurescript-setup.html
 
 
-# Running phantomjs tests
+# Running phantomjs tests (headless, slower, for CI)
 ```
 lein cljsbuild test
+```
+
+# Running tests in browser (quick, typical workflow)
+```
+lein figwheel devcards-test dev
 ```
 
 ## License
