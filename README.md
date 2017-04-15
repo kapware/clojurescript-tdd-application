@@ -2,6 +2,7 @@
 
 Clojurescript test showcase, based on https://8thlight.com/blog/eric-smith/2016/10/05/a-testable-clojurescript-setup.html
 
+See also https://github.com/kapware/cljs-tdd for leiningen template.
 
 # Running phantomjs tests (headless, slower, for CI)
 ```
