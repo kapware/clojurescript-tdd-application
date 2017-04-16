@@ -6,26 +6,40 @@
   :dependencies [[lein-doo "0.1.7"]
                  [devcards "0.2.3"]
                  [org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.521"]]
-  :plugins [[lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
-            [lein-doo "0.1.7"]
-            [lein-figwheel "0.5.10"]]
+                 [org.clojure/clojurescript "1.9.521"]
+                 [reagent "0.6.0"]
+                 [re-frame "0.9.2"]]
+  :plugins [[lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
+  :min-lein-version "2.5.3"
   :clean-targets ^{:protect false} [:target-path "out" "resources/public/cljs"]
+  :figwheel {:css-dirs ["resources/public/css"]}
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.8.2"]] 
+                   :plugins      [[lein-figwheel "0.5.10"]
+                                  [lein-doo "0.1.7"]]}}
   :cljsbuild {
-              :builds [{:id "dev"             ; development configuration
-                        :source-paths ["src"] ; Paths to monitor for build
-                        :figwheel true        ; Enable Figwheel
-                        :compiler {:main clojurescript_tdd_application.core     ; your main namespace
-                                   :asset-path "cljs/out"                       ; Where load-dependent files will go, mind you this one is relative
-                                   :output-to "resources/public/cljs/main.js"   ; Where the main file will be built
-                                   :output-dir "resources/public/cljs/out"      ; Directory for temporary files
-                                   :source-map-timestamp true}                  ; Sourcemaps hurray!
-                        }
+              :builds [{:id "dev"
+                        :source-paths ["src"]
+                        :figwheel     {:on-jsload "clojurescript_tdd_application.core/mount-root"}
+                        :compiler {:main clojurescript_tdd_application.core
+                                   :asset-path "cljs/out"
+                                   :output-to "resources/public/cljs/main.js"
+                                   :output-dir "resources/public/cljs/out"
+                                   :source-map-timestamp true
+                                   :preloads             [devtools.preload]
+                                   :external-config      {:devtools/config {:features-to-install :all}}}}
+                       {:id "min"
+                        :source-paths ["src"]
+                        :compiler     {:main            clojurescript_tdd_application.core
+                                       :output-to "resources/public/cljs/main.js"
+                                       :optimizations   :advanced
+                                       :closure-defines {goog.DEBUG false}
+                                       :pretty-print    false}}
                        {:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:main runners.doo
                                    :optimizations :none
-                                   :output-to "resources/public/cljs/tests/all-tests.js"}}
+                                   :output-to "resources/public/cljs/tests/all-tests.js"
+                                   :output-dir "resources/public/cljs/tests/test-out"}}
                        {:id "devcards-test"
                         :source-paths ["src" "test"]
                         :figwheel {:devcards true}
@@ -35,7 +49,4 @@
                                    :output-dir "resources/public/cljs/tests/out"
                                    :output-to "resources/public/cljs/tests/all-tests.js"
                                    :source-map-timestamp true}}]
-              :test-commands {"test" ["lein" "doo" "phantom" "test" "once"]}}
-  :main ^:skip-aot clojurescript-tdd-application.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+              :test-commands {"test" ["lein" "doo" "phantom" "test" "once"]}})
